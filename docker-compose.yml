@@ -12,6 +12,8 @@ services:
             - s_pocket_mysql
     s_pocket_php:
         build: ./infrastructure/${APP_ENV}/php-fpm
+        environment:
+            APP_DEBUG: ${APP_DEBUG}
         volumes:
             - .:/usr/share/nginx/html
     s_pocket_mysql:
