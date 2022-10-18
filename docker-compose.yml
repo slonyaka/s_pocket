@@ -1,0 +1,30 @@
+version: '3'
+services:
+    s_pocket_web:
+        image: nginx:latest
+        ports:
+            - ${APP_PORT}:80
+        volumes:
+            - .:/usr/share/nginx/html
+            - ./infrastructure/${APP_ENV}/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        links:
+            - s_pocket_php
+            - s_pocket_mysql
+    s_pocket_php:
+        build: ./infrastructure/${APP_ENV}/php-fpm
+        volumes:
+            - .:/usr/share/nginx/html
+    s_pocket_mysql:
+        image: mysql:latest
+        container_name: s_pocket_mysql
+        ports:
+            - ${DB_PORT_DOCKER}:3306
+        volumes:
+            - ./.data/mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: s_pocket
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    s_pocket_redis:
+        image: redis:latest
